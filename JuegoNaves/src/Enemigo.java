@@ -1,12 +1,38 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 
 /**
- *
- * @author Usuario
+ * @author FrankUba
  */
 public class Enemigo {
+    
+   
+    private String tipo;
+    private int salud;
+    private int ataque;
+    
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public void setSalud(int salud) {
+        this.salud = salud;
+    }
+
+    public void setAtaque(int ataque) {
+        this.ataque = ataque;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public int getSalud() {
+        return salud;
+    }
+
+    public int getAtaque() {
+        return ataque;
+    }
+    
     
 }
