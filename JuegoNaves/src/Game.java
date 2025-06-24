@@ -8,5 +8,5 @@
  * @author Usuario
  */
 public class Game {
-    
+
 }
