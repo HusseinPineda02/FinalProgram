@@ -8,31 +8,24 @@ public class Enemigo {
     private String tipo;
     private int salud;
     private int ataque;
-    
 
-    public void setTipo(String tipo) {
+    public Enemigo(String tipo, int salud, int ataque) {
         this.tipo = tipo;
-    }
-
-    public void setSalud(int salud) {
         this.salud = salud;
-    }
-
-    public void setAtaque(int ataque) {
         this.ataque = ataque;
     }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public int getSalud() {
-        return salud;
-    }
-
-    public int getAtaque() {
-        return ataque;
-    }
     
-    
+    public void atacar (Nave jugador){ //atacan al jugador y se reduce la salud.
+        jugador.recibirDaño(ataque);
+    }
+    public void recibirDaño(int cantidad){ //resta la ssalud del enemigo
+        salud-=cantidad;
+        if (salud<0)salud=0;
+    }
+    public boolean estarVivo(){ //retorna true si el enemigo tiene la salud mayor de 0
+        return salud>0;
+    }
+    public void mostrarEstado(){ 
+        System.out.println("enemigo tipo: "+tipo+"tiene: "+salud+"de salud.");
+    }
 }
