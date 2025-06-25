@@ -1,11 +1,20 @@
 public class Nave {
-    private int vida;
+    private int vida, puntuacion;
     private int x , y;
     private char sprite;
     private short direccion;
 
+    public Nave(){
+        this.setVida(5);
+        this.setX(5);
+        this.setY(9);
+        this.setDireccion(1);
+    }
     public void setVida(int vida){
         this.vida = vida;
+    }
+    public void setPuntuacion(int puntuacion){
+        this.puntuacion = puntuacion;
     }
     public void setX(int x){
         this.x = x;
@@ -31,6 +40,9 @@ public class Nave {
     public int getVida(){
         return vida;
     }
+    public int getPuntuacion(){
+        return puntuacion;
+    }
     public int getX(){
         return x;
     }
@@ -40,7 +52,26 @@ public class Nave {
     public short getDireccion(){
         return direccion;
     }
-    public char getSpriet(){
+    public char getSprite(){
         return sprite;
+    }
+    public void mostrarInfo() {
+        System.out.printf("Vida: %d\tPuntos: %d\n",vida,puntuacion);
+    }
+    public void recuperarVida(){
+        vida++;
+    }
+    public void perderVida(){
+        vida--;
+    }
+    public void naveDisparar(ArrayList<Disparo> disparos){
+        Disparo disparo;
+        switch(this.direccion){
+            case 0: disparo = new Disparo(this.x-1,this.y);
+            case 1: disparo = new Disparo(this.x,this.y-1);
+            case 2: disparo = new Disparo(this.x+1,this.y);
+            case 3: disparo = new Disparo(this.x,this.y+1);
+        }
+        disparos.add(disparo);
     }
 }
