@@ -4,14 +4,14 @@ public class Disparo {
     private int y;
 
     public Disparo(int x, int y) {
-    	this.x = x * 50 + 20;
-    	this.y = y * 50 + 20;
+    	this.x = x;
+    	this.y = y;
 	}
 	public void setX(int x) {
-		this.x = x * 50 + 20;
+		this.x = x;
 	}
 	public void setY(int y) {
-		this.y = y * 50 + 20;
+		this.y = y;
 	}
     public int getX(){
     	return x;
@@ -19,5 +19,7 @@ public class Disparo {
     public int getY(){
     	return y;
     }
-
+    public void moverDisparo() {
+    	this.y -= 1;
+    }
 } 

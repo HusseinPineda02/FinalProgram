@@ -15,8 +15,8 @@ public class Enemigo {
         this.y = y;
     }
     public Enemigo() {
-    	this.x = 50 * ((int)(Math.random()*10));
-    	this.y = 50 * 0;
+    	this.x = ((int)(Math.random()*10));
+    	this.y = 0;
     }
     public void setX (int x) {
     	this.x = x;
@@ -36,6 +36,9 @@ public class Enemigo {
         if (y > 600) { //si pasa los 600 pixeles se vuelve invisible
             visible = false;
         }
+    }
+    public void bajar() {
+    	this.y += 1;
     }
 
     public void dibujar(Graphics g) {//lo dibuja de rojo

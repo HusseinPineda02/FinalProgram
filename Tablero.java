@@ -1,13 +1,17 @@
-import java.util.*;
+import java.util.ArrayList;
+import javax.swing.Timer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Tablero extends JPanel implements KeyListener {
+public class Tablero extends JPanel implements KeyListener, ActionListener {
 	
     ArrayList<Enemigo> enemigos = new ArrayList<Enemigo>();
     ArrayList<Disparo> disparos = new ArrayList<Disparo>();
     Nave nave = new Nave();
+
+    final int casilla = 50;
+    int generadorEnemigos = 0;
     //Enemigo enemigo = new Enemigo();
 
     public Tablero(){
@@ -16,13 +20,14 @@ public class Tablero extends JPanel implements KeyListener {
     	this.setVisible(true);
     	this.setFocusable(true);
     	this.addKeyListener(this);
+    	Timer timer = new Timer (200,this);
+    	timer.start();
+    	
     }
     
     @Override
     protected void paintComponent(Graphics g) {
     	super.paintComponent(g);
-    	
-    	int casilla = 50;
     	
     	for (int y=0 ; y<10; y++) {
     		for (int x=0 ; x<10 ; x++ ) {
@@ -46,13 +51,12 @@ public class Tablero extends JPanel implements KeyListener {
     	
     	g.setColor(Color.RED);
     	for(int i=0 ; i<enemigos.size() ; i++) {
-    		g.fillRect(enemigos.get(i).getX(), enemigos.get(i).getY(), casilla, casilla);
+    		g.fillRect(enemigos.get(i).getX()*50, enemigos.get(i).getY()*50, casilla, casilla);
     	}
     	g.setColor(Color.YELLOW);
     	for(int i=0 ; i<disparos.size() ; i++) {
-    		g.fillRect(disparos.get(i).getX(), disparos.get(i).getY(), 10, 10);
+    		g.fillRect(disparos.get(i).getX()*50+20, disparos.get(i).getY()*50+20, 10, 10);
     	}
-    
     
     }
     
@@ -82,10 +86,45 @@ public class Tablero extends JPanel implements KeyListener {
 		}
 		repaint();
 	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		ArrayList<Disparo> descartesD = new ArrayList<Disparo>();
+		ArrayList<Enemigo> descartesE = new ArrayList<Enemigo>();
+		
+		for(int i=0 ; i<disparos.size() ; i++) {
+			if(disparos.get(i).getY() < 40) {
+				descartesD.add(disparos.get(i));
+			}
+			disparos.get(i).moverDisparo();
+		}
+		descartesD.removeAll(disparos);
+		
+		for(int i=0 ; i<enemigos.size() ; i++) {
+			if(enemigos.get(i).getY()<=9) {
+				enemigos.get(i).setY(enemigos.get(i).getY()+1);;
+			}	else {
+				descartesE.add(enemigos.get(i));
+			}
+		}
+		descartesE.removeAll(enemigos);
+		
+		generadorEnemigos++;
+		
+		if(generadorEnemigos>=3) {
+			generadorEnemigos = 0;
+			Enemigo nuevoE = new Enemigo( (int)(Math.random()*10+1) , 0 );
+			enemigos.add(nuevoE);
+		}
+		repaint();
+	}
+
+	
 	@Override
 	public void keyTyped(KeyEvent e) {}
 
 	@Override
 	public void keyReleased(KeyEvent e) {}
+
 
 }
