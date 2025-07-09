@@ -1,48 +1,46 @@
-public Tablero {
-    private int sizeX, sizeY;
-    private String[][] mapa;
+import java.util.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Tablero extends JPanel implements KeyListener {
+	
     ArrayList<Enemigo> enemigos;
     ArrayList<Disparo> disparos;
 
-    public Tablero(int sizeX, int sizeY){
-        this.sizeX = sizeX;
-        this.sizeY = sizeY;
-    }
     public Tablero(){
+    	this.setBounds(10,80,500,500);
+    	this.setBackground(Color.black);
+    	this.setVisible(true);
+    }
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+    	super.paintComponent(g);
+    	
+    	int casilla = 50;
+    	
+    	for (int y=0 ; y<10; y++) {
+    		for (int x=0 ; x<10 ; x++ ) {
+    			g.setColor(Color.white);
+    			g.drawRect(x*casilla, y*casilla, casilla, casilla);
+    		}
+    	}
+    }
+    
+	@Override
+	public void keyTyped(KeyEvent e) {
+		
+	}
 
-    }
-    public void setSizeX(int sizeX){
-        this.sizeX = sizeX;
-    }
-    public void setSizeY(int sizeY){
-        this.sizeY = sizeY;
-    }
-    public void spawnEnemigo(){
-        Enemigo enemy = new Enemigo();
-        enemy.setX(0);
-        enemy.setY(Math.random()*10);
-        enemigos.add(enemy);
-    }
-    public void destruirEnemigos(Enemigo enemy){
-        enemigos.remove(enemy);
-    }
-    public void llenarMapaVacio(){
-        for(int i=0; i<mapa.length;i++){
-            for(int j=0 ; j<mapa[i].length;j++){
-                if(){
-                    System.out.printf(" \t",);
-                }       
-            }
-            System.out.print("\n");
-        }
-    }
-    public void imprimir(String[] mapa){
-        for(int i=0; i<mapa.length;i++){
-            for(int j=0 ; j<mapa[i].length;j++){
-                System.out.printf("%s\t", mapa[i][j]);
-            }
-            System.out.print("\n");
-        }
-    }
+	@Override
+	public void keyPressed(KeyEvent e) {
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		
+	}
 
 }

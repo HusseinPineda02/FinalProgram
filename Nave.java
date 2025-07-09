@@ -1,8 +1,9 @@
+import java.util.ArrayList;
 public class Nave {
     private int vida, puntuacion;
     private int x , y;
     private char sprite;
-    private short direccion;
+    private int direccion;
 
     public Nave(){
         this.setVida(5);
@@ -22,7 +23,7 @@ public class Nave {
     public void setY(int y){
         this.y = y;
     }
-    public void setDireccion(short direccion){
+    public void setDireccion(int direccion){
         this.direccion = direccion;
     }
     public void setSprite(short direccion){
@@ -47,9 +48,9 @@ public class Nave {
         return x;
     }
     public int getY(){
-        return Y;
+        return y;
     }
-    public short getDireccion(){
+    public int getDireccion(){
         return direccion;
     }
     public char getSprite(){
@@ -61,17 +62,37 @@ public class Nave {
     public void recuperarVida(){
         vida++;
     }
-    public void perderVida(){
-        vida--;
+    public void recibirDaño(int cantidad){ 
+        vida-=cantidad;
+        if (vida<0) vida=0;
     }
     public void naveDisparar(ArrayList<Disparo> disparos){
         Disparo disparo;
         switch(this.direccion){
-            case 0: disparo = new Disparo(this.x-1,this.y);
-            case 1: disparo = new Disparo(this.x,this.y-1);
-            case 2: disparo = new Disparo(this.x+1,this.y);
-            case 3: disparo = new Disparo(this.x,this.y+1);
+            case 0: disparo = new Disparo(this.x-1,this.y);       disparos.add(disparo);
+            case 1: disparo = new Disparo(this.x,this.y-1);       disparos.add(disparo);
+            case 2: disparo = new Disparo(this.x+1,this.y);       disparos.add(disparo);
+            case 3: disparo = new Disparo(this.x,this.y+1);       disparos.add(disparo);
         }
-        disparos.add(disparo);
+    }
+    public void moverArriba(){
+        if(this.y>0){
+            y--;
+        }
+    }
+    public void moverAbajo(){
+        if(this.y<9){
+            y++;
+        }
+    }
+    public void moverIzquierda(){
+        if(this.x>0){
+            x--;
+        }
+    }
+    public void moverDerecha(){
+        if(this.x<9){
+            x++;
+        }
     }
 }
