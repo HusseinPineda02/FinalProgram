@@ -27,7 +27,7 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
     }
     
     @Override
-    protected void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) {
     	super.paintComponent(g);
     	
     	for (int y=0 ; y<10; y++) {
