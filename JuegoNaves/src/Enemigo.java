@@ -1,31 +1,36 @@
 
-/**
- * @author FrankUba
- */
-public class Enemigo {
-    
-   
-    private String tipo;
-    private int salud;
-    private int ataque;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Rectangle; 
 
-    public Enemigo(String tipo, int salud, int ataque) {
-        this.tipo = tipo;
-        this.salud = salud;
-        this.ataque = ataque;
+
+public class Enemigo {
+    public int x, y;
+    private int ancho = 40;
+    private int alto = 20;
+    private int velocidad = 2;
+    public boolean visible = true;
+
+    public Enemigo(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
-    
-    public void atacar (Nave jugador){ //atacan al jugador y se reduce la salud.
-        jugador.recibirDaño(ataque);
+
+    public void mover() {
+        y += velocidad;
+        if (y > 600) {
+            visible = false;
+        }
     }
-    public void recibirDaño(int cantidad){ //resta la ssalud del enemigo
-        salud-=cantidad;
-        if (salud<0)salud=0;
+
+    public void dibujar(Graphics g) {
+        if (visible) {
+            g.setColor(Color.RED);
+            g.fillRect(x, y, ancho, alto);
+        }
     }
-    public boolean estarVivo(){ //retorna true si el enemigo tiene la salud mayor de 0
-        return salud>0;
-    }
-    public void mostrarEstado(){ 
-        System.out.println("enemigo tipo: "+tipo+"tiene: "+salud+"de salud.");
+
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, ancho, alto);
     }
 }
