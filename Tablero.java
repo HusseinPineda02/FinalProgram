@@ -11,7 +11,8 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
     Nave nave = new Nave();
 
     final int casilla = 50;
-    int generadorEnemigos = 0;
+    int contGenerarEnemigo = 0;
+    int contBajarEnemigo = 0;
     //Enemigo enemigo = new Enemigo();
 
     public Tablero(){
@@ -93,29 +94,38 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
 		ArrayList<Enemigo> descartesE = new ArrayList<Enemigo>();
 		
 		for(int i=0 ; i<disparos.size() ; i++) {
-			if(disparos.get(i).getY() < 40) {
+			if(disparos.get(i).getY() < 1) {
 				descartesD.add(disparos.get(i));
 			}
 			disparos.get(i).moverDisparo();
 		}
-		descartesD.removeAll(disparos);
 		
-		for(int i=0 ; i<enemigos.size() ; i++) {
-			if(enemigos.get(i).getY()<=9) {
-				enemigos.get(i).setY(enemigos.get(i).getY()+1);;
-			}	else {
-				descartesE.add(enemigos.get(i));
+		descartesD.removeAll(disparos);
+		contBajarEnemigo++;
+		
+		if(contBajarEnemigo>=2) {
+			for(int i=0 ; i<enemigos.size() ; i++) {
+				if(enemigos.get(i).getY()<=9) {
+					enemigos.get(i).setY(enemigos.get(i).getY()+1);;
+				}	else {
+					descartesE.add(enemigos.get(i));
+					nave.recibirDamage(1);;
+					if(nave.getVida() == 0) {
+						//fin del juego, pantalla o ventana de fin de juego, implementar despues
+					}
+				}
 			}
+
 		}
 		descartesE.removeAll(enemigos);
+		contGenerarEnemigo++;
 		
-		generadorEnemigos++;
-		
-		if(generadorEnemigos>=3) {
-			generadorEnemigos = 0;
+		if(contGenerarEnemigo>=3) {
+			contGenerarEnemigo = 0;
 			Enemigo nuevoE = new Enemigo( (int)(Math.random()*10+1) , 0 );
 			enemigos.add(nuevoE);
 		}
+
 		repaint();
 	}
 
