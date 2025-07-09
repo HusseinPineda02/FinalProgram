@@ -2,10 +2,10 @@
 import java.awt.*;
 
 public class Disparo {
-    public int x, y;
+    public int x, y; //declarando variables de posicion
     private int velocidad = 10;
 
-    public Disparo(int x, int y) {
+    public Disparo(int x, int y) { //posicion del disparo
         this.x = x;
         this.y = y;
     }

@@ -2,7 +2,7 @@
 import javax.swing.JFrame;
 
 
-public class Juego {
+public class Juego { //clase principal, inicia el juego
     public static void main(String[] args) {
         JFrame frame = new JFrame("Juego de Naves");
         Mapa panel = new Mapa();
