@@ -14,6 +14,8 @@ public class Tablero extends JPanel implements KeyListener {
     	this.setBounds(10,80,500,500);
     	this.setBackground(Color.black);
     	this.setVisible(true);
+    	this.setFocusable(true);
+    	this.addKeyListener(this);
     }
     
     @Override
@@ -28,7 +30,7 @@ public class Tablero extends JPanel implements KeyListener {
     			g.drawRect(x*casilla, y*casilla, casilla, casilla);
     		}
     	}
-    	Disparo d1 = new Disparo( (int)(Math.random()*10+1) , (int)(Math.random()*10+1));
+    	/*Disparo d1 = new Disparo( (int)(Math.random()*10+1) , (int)(Math.random()*10+1));
     	Disparo d2 = new Disparo( (int)(Math.random()*10+1) , (int)(Math.random()*10+1));
     	
     	disparos.add(d1);
@@ -37,7 +39,7 @@ public class Tablero extends JPanel implements KeyListener {
     	Enemigo e2 = new Enemigo();
 
     	enemigos.add(e1);
-    	enemigos.add(e2);
+    	enemigos.add(e2);*/
     	
     	g.setColor(Color.GREEN);
     	g.fillRect(nave.getPosicionX(),nave.getPosicionY(), casilla, casilla);
@@ -51,23 +53,39 @@ public class Tablero extends JPanel implements KeyListener {
     		g.fillRect(disparos.get(i).getX(), disparos.get(i).getY(), 10, 10);
     	}
     
-    	
-    	
+    
     }
     
 	@Override
-	public void keyTyped(KeyEvent e) {
-		
-	}
-
-	@Override
 	public void keyPressed(KeyEvent e) {
+		int tecla = e.getKeyCode();
 		
+		switch(tecla) {
+			case KeyEvent.VK_LEFT: 
+				if(nave.getCeldaX()!=0) nave.setCeldaX(nave.getCeldaX()-1);
+				break;
+			case KeyEvent.VK_RIGHT: ; 
+				if(nave.getCeldaX()!=9) nave.setCeldaX(nave.getCeldaX()+1);
+				break;
+			case KeyEvent.VK_UP:
+				if(nave.getCeldaY()!=0) nave.setCeldaY(nave.getCeldaY()-1);
+				break;
+			case KeyEvent.VK_DOWN:
+				if(nave.getCeldaY()!=9) nave.setCeldaY(nave.getCeldaY()+1);
+				break;
+			case KeyEvent.VK_SPACE:
+				if(nave.getCeldaY()!=0) {
+					Disparo nuevoD = new Disparo(nave.getCeldaX(), nave.getCeldaY()-1);
+					disparos.add(nuevoD);
+				}
+				break;
+		}
+		repaint();
 	}
+	@Override
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		
-	}
+	public void keyReleased(KeyEvent e) {}
 
 }
