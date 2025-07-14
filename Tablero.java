@@ -6,6 +6,7 @@ import java.awt.event.*;
 
 public class Tablero extends JPanel implements KeyListener, ActionListener {
 
+    ArrayList<DisparoEnemigo> disparosEnemigos = new ArrayList<>();
     ArrayList<Enemigo> enemigos = new ArrayList<Enemigo>();
     ArrayList<Disparo> disparos = new ArrayList<Disparo>();
     Nave nave = new Nave();
@@ -29,6 +30,10 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        g.setColor(Color.CYAN);
+        for (DisparoEnemigo d : disparosEnemigos) {
+            g.fillRect(d.getX() * 50 + 20, d.getY() * 50 + 20, 10, 10);
+        }
         for (Enemigo enemigo : enemigos) {
             enemigo.dibujar(g);
         }
@@ -87,7 +92,10 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
                 if(nave.getCeldaY()!=0) {
                     Disparo nuevoD = new Disparo(nave.getCeldaX(), nave.getCeldaY()-1);
                     disparos.add(nuevoD);
+
                 }
+                SonidoDisparo.reproducir("Disparo.wav");
+
                 break;
         }
         repaint();
@@ -97,6 +105,22 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
     public void actionPerformed(ActionEvent e) {
         ArrayList<Disparo> descartesD = new ArrayList<Disparo>();
         ArrayList<Enemigo> descartesE = new ArrayList<Enemigo>();
+
+        for (Enemigo enemigo : enemigos) {
+            if (Math.random() < 0.02) { // 2% de probabilidad por ciclo
+                disparosEnemigos.add(new DisparoEnemigo(enemigo.getX() / 50, enemigo.getY() / 50 + 1));
+            }
+        }
+        ArrayList<DisparoEnemigo> descartesDE = new ArrayList<>();
+
+        for (DisparoEnemigo d : disparosEnemigos) {
+            d.mover();
+            if (d.getY() >= 10) {
+                descartesDE.add(d);
+            }
+        }
+
+        disparosEnemigos.removeAll(descartesDE);
         for (Enemigo enemigo : enemigos) {
             enemigo.mover();
         }
