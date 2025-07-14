@@ -1,25 +1,25 @@
-
 public class Disparo {
-    // Variables para la posicion del disparo 
-
     private int x;
     private int y;
-    private char diseño = '!'; // Este sera el simbolo de nuestro disparo
 
-
-    public Disparo(int x, int y){ //Nuestro constructor para posicionarlo despues
-   
+    public Disparo(int x, int y) {      //Constructor para posicionar el disparo en una ubicacion ene especifico
         this.x = x;
         this.y = y;
     }
-
-    public void movimientoArriba(){ //La "bala" subiendo casilla a casilla en la matriz eso siedo mayo a 0 para que no se salga del tablero
-        if (y>0) y--;
+    public void setX(int x) {           // Esto para cambiar la posicion del disparo si se necesitara
+        this.x = x;
+    }
+    public void setY(int y) {
+        this.y = y;
+    }
+    public int getX(){          //Esto nos permite acceder a los disparos desde otras clases
+        return x;
+    }
+    public int getY(){
+        return y;
+    }
+    public void moverDisparo() {        // Moviliza el disparo una casilla hacia arriba
+        this.y -= 1;
     }
 
-    //Nuestros getters para acceder mas adelante a nuestros atributos de la posicion y del simbolo 
-
-    public int getX(){return x; }
-    public int getY(){return y; }
-    public char getDiseño(){return diseño;}
-} 
+}
