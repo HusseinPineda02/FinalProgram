@@ -1,48 +1,32 @@
 import java.awt.Color;
-import java.awt.event.*;
 import javax.swing.*;
 
-public class Menu extends JPanel implements ActionListener, KeyListener{
-	Nave nave = new Nave();
-	
-	Menu(){
-		this.setBounds(510, 81, 174, 499);
-		this.setBackground(Color.gray);
-		
-		JLabel vidas = new JLabel("Vidas: " + nave.getVida());
-		JLabel bajas = new JLabel("Enemigos eliminados: " + nave.getBajas());
-		JLabel puntuacion = new JLabel("Puntuacion: " + nave.getPuntuacion());
-		
-		
-		this.add(vidas);
-		this.add(bajas);
-		this.add(puntuacion);
-		
-		
-	}
-	
-	
-	@Override
-	public void keyTyped(KeyEvent e) {
-		
-	}
+public class Menu extends JPanel {
+    private JLabel vidas;
+    private JLabel bajas;
+    private JLabel puntuacion;
+    private Nave nave;
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		
-	}
+    public Menu(Nave nave) {
+        this.nave = nave;
 
-	@Override
-	public void keyReleased(KeyEvent e) {
-		
-	}
+        this.setBounds(510, 81, 174, 499);
+        this.setBackground(Color.gray);
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-	}
-	
-	
-	
+        vidas = new JLabel("Vidas: " + nave.getVida());
+        bajas = new JLabel("Enemigos eliminados: " + nave.getBajas());      //muestra atributos de la nave
+        puntuacion = new JLabel("Puntuación: " + nave.getPuntuacion());
+
+        this.add(vidas);
+        this.add(bajas);
+        this.add(puntuacion);
+    }
+
+    
+    public void actualizarDatos() {
+        vidas.setText("Vidas: " + nave.getVida());
+        bajas.setText("Enemigos eliminados: " + nave.getBajas());       // Método que se llamará desde Tablero para actualizar los datos
+        puntuacion.setText("Puntuación: " + nave.getPuntuacion());
+    }
 }
 

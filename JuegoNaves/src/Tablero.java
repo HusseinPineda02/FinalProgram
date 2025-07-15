@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import javax.swing.Timer;
 import javax.swing.*;
 import java.awt.*;
+import static java.awt.SystemColor.menu;
 import java.awt.event.*;
 
 public class Tablero extends JPanel implements KeyListener, ActionListener {
@@ -18,13 +19,18 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
     int contBajarEnemigo = 0;
     int contEnemigoAmarillo = 0;
     int contDisparoAmarillo = 0;
+    private final Menu menu;
 
-    public Tablero(){
+    public Tablero(Nave nave, Menu menu){
+        this.nave = nave;
+        this.menu = menu;
+
         this.setBounds(10,80,500,500);
         this.setBackground(Color.black);
         this.setVisible(true);
         this.setFocusable(true);
         this.addKeyListener(this);
+
         Timer timer = new Timer (200,this);
         timer.start();
     }
@@ -149,11 +155,11 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
         
                     // COLISIONES
 
-            // Disparo jugador vs Disparo enemigo
+            // Disparo nave vs Disparo enemigo
             for (Disparo d : disparos) {
                 for (DisparoEnemigo de : disparosEnemigos) {
-                    if (d.getX() == de.getX() && d.getY() == de.getY()) {
-                        descartesD.add(d);
+                    if (d.getX() == de.getX() && d.getY() == de.getY()) { //compara coordenadas de los disparos
+                        descartesD.add(d);                                //si coincide se elimnan  
                         descartesDE.add(de);
                     }
                 }
@@ -165,8 +171,8 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
                     descartesDE.add(de);
                     nave.recibirDamage(1);
                     if (nave.getVida() <= 0) {
-                        nave.setCeldaX(-1);
-                        nave.setCeldaY(-1);
+                        nave.setCeldaX(-1); 
+                        nave.setCeldaY(-1); //te resta una vida por colision
                     }
                 }
             }
@@ -175,35 +181,37 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
             for (Enemigo enemigo : enemigos) {
                 if (enemigo.getX() == nave.getCeldaX() && enemigo.getY() == nave.getCeldaY()) {
                     nave.setCeldaX(-1);
-                    nave.setCeldaY(-1);
+                    nave.setCeldaY(-1); //con una colision mueres
                 }
             }
 
-            // Disparo jugador vs Enemigo rojo
+            // Disparo nave vs Enemigo rojo
             for (Disparo d : disparos) {
                 for (Enemigo enemigo : enemigos) {
                     if (d.getX() == enemigo.getX() && d.getY() == enemigo.getY()) {
                         descartesD.add(d);
-                        descartesE.add(enemigo);
+                        descartesE.add(enemigo);//los dos se eliminan cuando chocan
                     }
                 }
             }
 
-            // Disparo jugador vs Enemigo amarillo
+            // Disparo nave vs Enemigo amarillo
             for (Disparo d : disparos) {
                 for (EnemigoAmarillo ea : enemigosAmarillos) {
                     if (d.getX() == ea.getX() && d.getY() == ea.getY()) {
                         descartesD.add(d);
                         descartesEA.add(ea);
-                        nave.destruirEnemigos();
+                        nave.destruirEnemigos(); //suma puntaje,suma la eliminacion y elimina al enemigo gracias al metodo
                     }
                 }
             }
         disparos.removeAll(descartesD);
         enemigos.removeAll(descartesE);
-        enemigosAmarillos.removeAll(descartesEA);
+        enemigosAmarillos.removeAll(descartesEA);       //limpiamos los objetos
         disparosEnemigos.removeAll(descartesDE);
+        menu.actualizarDatos(); //actualiza datos
         repaint();
+        
     }
 
     @Override public void keyTyped(KeyEvent e) {}
