@@ -1,19 +1,37 @@
 
+import java.awt.Color;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
+public class Juego extends JFrame {
+	//ArrayList<Enemigo> enemigos = new ArrayList<Enemigo>();
+	//Nave nave = new Nave();
+	
+	Juego(){
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setSize(700,630);
+		this.setLayout(null);
+		this.setTitle("SHIP BATTLE BETA");
+		this.setResizable(false);
+		this.setBackground(Color.blue);
+		
+		JLabel titulo = new JLabel ("SHIP BATTLE BETA");
+		titulo.setBounds(300, 20, 200, 50);
+		
+		Menu datos = new Menu();
 
-public class Juego { //clase principal, inicia el juego
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Juego de Naves");
-        Mapa panel = new Mapa();
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.add(panel);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-
-        panel.iniciarJuego();
+		Tablero mapa = new Tablero();
+		
+		this.add(datos);
+		this.add(mapa);
+		this.add(titulo);
+		
+		this.setVisible(true);
+	}
+	
+    public static void main(String[] args){
+    	
+    	Juego game = new Juego();
+ 
     }
 }

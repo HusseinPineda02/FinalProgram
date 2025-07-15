@@ -1,21 +1,27 @@
 
-import java.awt.*;
 
 public class Disparo {
-    public int x, y; //declarando variables de posicion
-    private int velocidad = 10;
 
-    public Disparo(int x, int y) { //posicion del disparo
-        this.x = x;
-        this.y = y;
-    }
+    private int x;
+    private int y;
 
-    public void mover() {
-        y -= velocidad;
+    public Disparo(int x, int y) {
+    	this.x = x;
+    	this.y = y;
+	}
+	public void setX(int x) {
+		this.x = x;
+	}
+	public void setY(int y) {
+		this.y = y;
+	}
+    public int getX(){
+    	return x;
     }
-
-    public void dibujar(Graphics g) {
-        g.setColor(Color.YELLOW);
-        g.fillRect(x, y, 5, 10);
+    public int getY(){
+    	return y;
     }
-}
+    public void moverDisparo() {
+    	this.y -= 1;
+    }
+} 
