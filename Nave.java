@@ -53,19 +53,21 @@ public class Nave {
     public int getBajas() {
     	return bajas;
     }
-    public void mostrarInfo() {
-        System.out.printf("Vida: %d\tPuntos: %d\n",vida,puntuacion);
+    public void recuperarVida(int enemigoDestruido){
+    	if(vida<=10) {
+    		if(enemigoDestruido == 1) {
+            	vida++;
+            }	else {
+            	vida+=2;
+            }
+    	}
     }
-    public void recuperarVida(){
-        vida++;
+    public void recibirDamage(int tipoImpacto){ // 1 es disparo, 3 es meteorito 
+        vida -= tipoImpacto;
     }
-    public void recibirDamage(int cantidad){ 
-        vida-=cantidad;
-        if (vida<0) vida=0;
-    }
-    public void destruirEnemigos() {
+    public void destruirEnemigos(int enemigoDestruido) {
     	bajas++;
-    	this.puntuacion += 50;
+    	puntuacion += (enemigoDestruido*50);
     }
     
     public void moverArriba(){
