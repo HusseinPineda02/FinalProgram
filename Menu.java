@@ -1,6 +1,6 @@
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -45,6 +45,11 @@ public class Menu extends JPanel {
         super.paintComponent(g);
         g.drawImage(fondoMenu, 0, 0, 174, 499,this);
         
+        Graphics2D filtro= (Graphics2D) g;
+        Color negro = new Color(0, 0, 0, 100); // Último valor = opacidad (0–255)
+        filtro.setColor(negro);
+        filtro.fillRect(0, 0, getWidth(), getHeight());
+
         repaint();
     }	
     

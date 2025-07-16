@@ -21,6 +21,7 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
     private BufferedImage naveSprite;
     private BufferedImage meteoro;
     private BufferedImage eaSprite;
+    private Timer timer;
     
     final int casilla = 50;
     int contGenerarEnemigo = 0;
@@ -49,9 +50,9 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
         this.setFocusable(true);
         this.addKeyListener(this);
 
-        Timer timer = new Timer (100,this);
+        timer = new Timer (100,this);
         timer.start();
-    }
+    }	
 
     @Override
     public void paintComponent(Graphics g) {
@@ -60,6 +61,11 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
         if(fondo!=null) {
         	g.drawImage(fondo, 0, 0, 500, 500, this);
         }
+        Graphics2D filtro= (Graphics2D) g;
+        Color negro = new Color(0, 0, 0, 150);
+        filtro.setColor(negro);
+        filtro.fillRect(0, 0, getWidth(), getHeight());
+
         
         if(naveSprite!=null) {
         	g.drawImage(naveSprite,  nave.getPosicionX(),  nave.getPosicionY(),  casilla, casilla,this );
@@ -135,7 +141,15 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
             if (de.getY() > 9) descartesDE.add(de);
             de.moverDisparo();
         }
-
+        // CREAR METEORITOS
+        contGenerarEnemigo++;
+        if (contGenerarEnemigo >= 15) {
+            contGenerarEnemigo = 0;
+            Enemigo nuevoE = new Enemigo((int)(Math.random()*10), 0);
+            enemigos.add(nuevoE);
+        }
+        
+        // BAJAR METEORITOS
         contBajarEnemigo++;
         if(contBajarEnemigo >= 10) {
         	contBajarEnemigo = 0;
@@ -144,17 +158,16 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
                     enemigo.setY(enemigo.getY()+1);
                 } else {
                     descartesE.add(enemigo);
+                    nave.recibirDamage(4);
+                    if(nave.getVida() <= 0) {
+            			GameOver();
+            		}
+                    menu.actualizarDatos();
                 }
             }
         }
-        // METEOROS
-        contGenerarEnemigo++;
-        if (contGenerarEnemigo >= 15) {
-            contGenerarEnemigo = 0;
-            Enemigo nuevoE = new Enemigo((int)(Math.random()*10), 0);
-            enemigos.add(nuevoE);
-        }
-        // AMARILLO GRANDE
+      
+        // CREAR ENEMIGO GRANDE
         contEnemigoAmarillo++;
         if (contEnemigoAmarillo >= 40 && enemigosAmarillos.size() < 2) {
             contEnemigoAmarillo = 0;
@@ -168,8 +181,9 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
         	} else if (ea1.getX()==8){
         		ea1.setDireccion(0);
         	}
-        }        
+        } 
         
+        // MOVIMIENTO HORIZONTAL DE AMARILLO
         contMoverAmarillo++;
         if(contMoverAmarillo >= 20) {
         	contMoverAmarillo = 0;
@@ -181,19 +195,26 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
                 }        
         	}
         }
+        
+        // DISPARO DE NAVE GRANDE AMARILLO
+        contDisparoAmarillo++;
+        if(contDisparoAmarillo>=10) {
+        	contDisparoAmarillo = 0 ;
+        	for (EnemigoAmarillo ea: enemigosAmarillos) {
+            	
+            	DisparoEnemigo de = new DisparoEnemigo(ea.getX(),ea.getY()+1);
+            	
+            	disparosEnemigos.add(de);
+            }
+        }      
+        
         boolean colisionNE, colisionDE, colisionNEA, colisionDEA, colisionNDE, colisionDDE; 
         // COLISION DE LA NAVE Y METEORITO
         for (Enemigo e1: enemigos) {
         	colisionNE = nave.getCeldaX()==e1.getX() && nave.getCeldaY()==e1.getY();
         	if(colisionNE){
         		descartesE.add(e1);
-        		nave.recibirDamage(3);
-        		if(nave.getVida() <= 0) {
-        			GameOver();
-        		}
-        		nave.destruirEnemigos(1);
-        		menu.actualizarDatos();
-
+        		GameOver();
         	}
         	// COLISION DE DISPAROS CON METEORITO
         	for(Disparo d: disparos) {
@@ -211,16 +232,7 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
         for (EnemigoAmarillo ea: enemigosAmarillos) {
         	colisionNEA = ( (nave.getCeldaX()==ea.getX() || nave.getCeldaX()==ea.getX()+1) && nave.getCeldaY()==ea.getY() );
         	if(colisionNEA) {
-        		nave.recibirDamage(3);
-        		if(nave.getVida() <= 0) {
-        			GameOver();
-        		}
-        		ea.recibirDamage(3);
-        		if(ea.getVida()<=0) {
-        			descartesEA.add(ea);
-        			nave.destruirEnemigos(2);
-        		}
-        		menu.actualizarDatos();
+	        	GameOver();
         	}
         	for (Disparo d: disparos) {
         		colisionDEA = ( (d.getX()==ea.getX() || d.getX()==ea.getX()+1) && d.getY()==ea.getY());
@@ -238,9 +250,16 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
         
         //COLISION CON DISPAROS ENEMIGOS
         for (DisparoEnemigo de: disparosEnemigos) {
-        	
+        	colisionNDE = ( nave.getCeldaX()==de.getX() && nave.getCeldaY()==de.getY());
+        	if(colisionNDE) {
+        		nave.recibirDamage(1);
+        		if(nave.getVida() <= 0) {
+        			GameOver();
+        		}
+        		descartesDE.add(de);
+        		menu.actualizarDatos();
+        	}
         }
-        
         
         
         disparos.removeAll(descartesD);
@@ -248,12 +267,15 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
         enemigosAmarillos.removeAll(descartesEA);
         disparosEnemigos.removeAll(descartesDE);
         menu.actualizarDatos();
-        repaint();  
+        repaint();
+        
     }
-    
     public void GameOver() {
-    	
+    	timer.stop();
+    	JOptionPane.showMessageDialog(this, "GAME OVER");
+    	System.exit(0);
     }
+
     @Override public void keyTyped(KeyEvent e) {}
     @Override public void keyReleased(KeyEvent e) {}
 }
