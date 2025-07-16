@@ -1,48 +1,33 @@
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle; // Nos ayudara para tener en cuenta posibles choques
+import java.awt.Rectangle;
 
 public class Enemigo {
-    private int x, y; //declarando la posicion del enemigo
-    private int ancho = 40; //tamaño
+    private int x, y;
+    private int ancho = 40;
     private int alto = 20;
-    private int velocidad = 2; //velocidad de movimiento
-    public int getVelocidad() {
-        return velocidad;
-    }
-    public void setVelocidad(int velocidad) {
-        this.velocidad = velocidad;
-    }
+    private int vida = 1;
 
-    public boolean visible = true; //indica si esta dentro del panel o ya salió
+    private int limiteCiclos = 2;     // Ciclos que debe esperar antes de moverse (mayor = más lento)
+    private int contador = 0;         // Cuenta los ciclos para saber cuándo moverse
 
+    public boolean visible = true;
 
+    // Constructor con posición en celdas (se convierte a píxeles)
     public Enemigo(int x, int y) {
-        this.x = x * 50; // ahora convierte de celda a píxel
+        this.x = x * 50;
         this.y = y * 50;
     }
-    public Enemigo() {      // Coloca al enemigo en la parte superior de forma aleatoria
-        this.x = ((int)(Math.random()*10));
-        this.y = 0;
-    }
-    public void setX (int x) {
-        this.x = x;
-    }
-    public void setY (int y) {
-        this.y = y;
-    }
-    public int getX() {
-        return x;
-    }
-    public int getY() {
-        return y;
+
+    // Permite ajustar la velocidad del enemigo desde Tablero
+    public void setCiclosParaMover(int ciclos) {
+        this.limiteCiclos = Math.max(1, ciclos); // mínimo 1 ciclo
     }
 
-    private int contador = 0;
-
+    // Movimiento vertical del enemigo
     public void mover() {
         contador++;
-        if (contador >= 2) { // avanza cada 2 ciclos
+        if (contador >= limiteCiclos) {
             y += 1;
             contador = 0;
         }
@@ -50,18 +35,54 @@ public class Enemigo {
             visible = false;
         }
     }
+
     public void bajar() {
         this.y += 1;
     }
 
-    public void dibujar(Graphics g) {//lo dibuja de rojo
+    public void dibujar(Graphics g) {
         if (visible) {
             g.setColor(Color.RED);
             g.fillRect(x, y, ancho, alto);
         }
     }
 
-    public Rectangle getBounds() {//esto es para detectar choques (aun no se usa)
+    // --- Vida y colisiones ---
+    public void setVida(int vida) {
+        this.vida = vida;
+    }
+
+    public int getVida() {
+        return vida;
+    }
+
+    public void recibirDamage(int cantidad) {
+        vida -= cantidad;
+        if (vida < 0) vida = 0;
+    }
+
+    public boolean estaMuerto() {
+        return vida <= 0;
+    }
+
+    public Rectangle getBounds() {
         return new Rectangle(x, y, ancho, alto);
+    }
+
+    // Accesores para coordenadas (por si lo necesitamos)
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }

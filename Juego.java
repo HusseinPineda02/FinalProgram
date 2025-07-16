@@ -18,7 +18,7 @@ public class Juego extends JFrame {
 
         Menu datos = new Menu();
 
-        Tablero mapa = new Tablero();
+        Tablero mapa = new Tablero(datos);
 
         this.add(datos);
         this.add(mapa);

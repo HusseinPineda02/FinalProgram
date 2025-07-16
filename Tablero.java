@@ -9,20 +9,27 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
     ArrayList<DisparoEnemigo> disparosEnemigos = new ArrayList<>();
     ArrayList<Enemigo> enemigos = new ArrayList<Enemigo>();
     ArrayList<Disparo> disparos = new ArrayList<Disparo>();
+
     Nave nave = new Nave();
 
     final int casilla = 50;
     int contGenerarEnemigo = 0;
     int contBajarEnemigo = 0;
+    int ciclosGlobalEnemigos = 2; // inicia moviéndose cada 3 ciclos
+    int contadorCiclos = 0;       // para saber cuándo acelerar
+    int contadorCiclosDisparo = 0;
+
+    private Menu menu;
     //Enemigo enemigo = new Enemigo();
 
-    public Tablero(){
+    public Tablero(Menu menu) {
+        this.menu = menu;
         this.setBounds(10,80,500,500);
         this.setBackground(Color.black);
         this.setVisible(true);
         this.setFocusable(true);
         this.addKeyListener(this);
-        Timer timer = new Timer (200,this);
+        Timer timer = new Timer (150,this);
         timer.start();
 
     }
@@ -31,15 +38,14 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.CYAN);
+
         for (DisparoEnemigo d : disparosEnemigos) {
             g.fillRect(d.getX() * 50 + 20, d.getY() * 50 + 20, 10, 10);
         }
         for (Enemigo enemigo : enemigos) {
             enemigo.dibujar(g);
         }
-        for (Enemigo enemigo : enemigos) {
-            enemigo.mover(); // esto llama al mover() de Enemigo o EnemigoT
-        }
+
         for (int y=0 ; y<10; y++) {
             for (int x=0 ; x<10 ; x++ ) {
                 g.setColor(Color.white);
@@ -94,7 +100,6 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
                     disparos.add(nuevoD);
 
                 }
-                SonidoDisparo.reproducir("Disparo.wav");
 
                 break;
         }
@@ -103,15 +108,20 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
         ArrayList<Disparo> descartesD = new ArrayList<Disparo>();
         ArrayList<Enemigo> descartesE = new ArrayList<Enemigo>();
+        ArrayList<DisparoEnemigo> descartesDE = new ArrayList<>(); // limpiar disparos enemigos que salían del tablero
+
 
         for (Enemigo enemigo : enemigos) {
             if (Math.random() < 0.02) { // 2% de probabilidad por ciclo
-                disparosEnemigos.add(new DisparoEnemigo(enemigo.getX() / 50, enemigo.getY() / 50 + 1));
+                int celdaX = enemigo.getX() / 50;
+                int celdaY = enemigo.getY() / 50;
+                disparosEnemigos.add(new DisparoEnemigo(celdaX, celdaY + 1));
             }
         }
-        ArrayList<DisparoEnemigo> descartesDE = new ArrayList<>();
+
 
         for (DisparoEnemigo d : disparosEnemigos) {
             d.mover();
@@ -120,7 +130,29 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
             }
         }
 
+
+        Rectangle rNave = new Rectangle(nave.getPosicionX(), nave.getPosicionY(), 50, 50);
+        for (int i = disparosEnemigos.size() - 1; i >= 0; i--) {
+            DisparoEnemigo d = disparosEnemigos.get(i);
+            Rectangle rDisparoE = new Rectangle(d.getX() * 50 + 20, d.getY() * 50 + 20, 10, 10);
+
+            if (rDisparoE.intersects(rNave)) {
+                System.out.println("VIDA ANTES DEL DAÑO: " + nave.getVida());
+                nave.recibirDamage(1);
+                System.out.println("VIDA DESPUÉS DEL DAÑO: " + nave.getVida());
+
+                disparosEnemigos.remove(i); // Eliminar inmediatamente
+
+                if (nave.getVida() <= 0) {
+                    JOptionPane.showMessageDialog(null, "¡La nave fue destruida! Fin del juego.");
+                    System.exit(0);
+                }
+
+                break; // Solo un disparo puede dañar por ciclo
+            }
+        }
         disparosEnemigos.removeAll(descartesDE);
+
         for (Enemigo enemigo : enemigos) {
             enemigo.mover();
         }
@@ -134,34 +166,61 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
         descartesD.removeAll(disparos);
         contBajarEnemigo++;
 
-        if (contBajarEnemigo >= 2) {
-            contBajarEnemigo = 0; // reinicia el contador
-
+        for (Disparo disparo : disparos) {
             for (Enemigo enemigo : enemigos) {
-                if (enemigo.getY() > 9) {
-                    descartesE.add(enemigo);
-                    nave.recibirDamage(1);
-                    if (nave.getVida() == 0) {
-                        // fin del juego
+                Rectangle rDisparo = new Rectangle(disparo.getX() * 50 + 20, disparo.getY() * 50 + 20, 10, 10);
+                Rectangle rEnemigo = enemigo.getBounds();
+
+                if (rDisparo.intersects(rEnemigo)) {
+                    enemigo.recibirDamage(1);        // le quitamos 1 vida al enemigo
+                    descartesD.add(disparo);         // eliminamos el disparo
+
+                    if (enemigo.estaMuerto()) {
+                        descartesE.add(enemigo);     // eliminamos enemigo si su vida llegó a 0
+                        nave.destruirEnemigos();     // sumamos puntos
                     }
                 }
             }
         }
 
+        enemigos.removeAll(descartesE);
+        disparos.removeAll(descartesD);
+
+        contadorCiclosDisparo++;
+        if (contadorCiclosDisparo >= 2) {
+            for (int i = 0 ; i < disparos.size() ; i++) {
+            }
+            contadorCiclosDisparo = 0;
+        }
+
         descartesE.removeAll(enemigos);
         contGenerarEnemigo++;
 
-        if (contGenerarEnemigo  >= 6) {
+        if (contGenerarEnemigo >= 6) {
             contGenerarEnemigo = 0;
             int columna = (int)(Math.random() * 10); // 0 a 9
-            if (Math.random() <  0.88) {
-                enemigos.add(new Enemigo(columna, 0));
+            if (Math.random() < 0.8) {  //80% de los enemigos son comunes
+                Enemigo nuevo = new Enemigo(columna, 0);
+                nuevo.setCiclosParaMover(ciclosGlobalEnemigos); //
+                enemigos.add(nuevo);
             } else {
-                enemigos.add(new EnemigoT(columna , 0)); // EnemigoT espera posición en píxeles
+                EnemigoT tanque = new EnemigoT(columna, 0);
+                enemigos.add(tanque);
             }
         }
-
+        menu.actualizarDatos(nave);
         repaint();
+        contadorCiclos++;
+        if (contadorCiclos >= 30) { // cada 30 ciclos, acelera
+            if (ciclosGlobalEnemigos > 1) {
+                ciclosGlobalEnemigos--;
+                for (Enemigo enemigo : enemigos) {
+                    enemigo.setCiclosParaMover(ciclosGlobalEnemigos);
+                }
+                System.out.println("Aumentando velocidad de enemigos. Ahora: cada " + ciclosGlobalEnemigos + " ciclos.");
+            }
+            contadorCiclos = 0;
+        }
     }
 
 
