@@ -1,47 +1,56 @@
 import java.awt.Color;
-import java.awt.event.*;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class Menu extends JPanel implements ActionListener, KeyListener{
-	Nave nave = new Nave();
+public class Menu extends JPanel {
 	
-	Menu(){
-		this.setBounds(510, 81, 174, 499);
-		this.setBackground(Color.gray);
-		
-		JLabel vidas = new JLabel("Vidas: " + nave.getVida());
-		JLabel bajas = new JLabel("Enemigos eliminados: " + nave.getBajas());
-		JLabel puntuacion = new JLabel("Puntuacion: " + nave.getPuntuacion());
-		
-		
-		this.add(vidas);
-		this.add(bajas);
-		this.add(puntuacion);
-		
-		
-	}
-	
-	
-	@Override
-	public void keyTyped(KeyEvent e) {
-		
-	}
+    private JLabel vidas;
+    private JLabel bajas;
+    private JLabel puntuacion;
+    private Nave nave;
+    private BufferedImage fondoMenu;
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		
-	}
+    public Menu(Nave nave) {
+        this.nave = nave;
 
-	@Override
-	public void keyReleased(KeyEvent e) {
-		
-	}
+        this.setBounds(510, 81, 174, 499);
+        this.setBackground(Color.gray);
+        
+        try {
+        	fondoMenu = ImageIO.read(new File("src/fondoMenu.jpg"));
+     	} catch (IOException e) {
+     		e.printStackTrace();
+     	}
+        vidas = new JLabel("Vidas: " + nave.getVida());
+        bajas = new JLabel("Enemigos eliminados: " + nave.getBajas());
+        puntuacion = new JLabel("Puntuación: " + nave.getPuntuacion());
+        
+        vidas.setForeground(Color.WHITE);	vidas.setFont(new Font("Serif", Font.BOLD, 15));
+        bajas.setForeground(Color.WHITE);	bajas.setFont(new Font("Serif", Font.BOLD, 15));
+        puntuacion.setForeground(Color.WHITE);	puntuacion.setFont(new Font("Serif", Font.BOLD, 15));
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-	}
-	
-	
-	
+        this.add(vidas);
+        this.add(bajas);
+        this.add(puntuacion);
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(fondoMenu, 0, 0, 174, 499,this);
+        
+        repaint();
+    }	
+    
+    public void actualizarDatos() {
+        vidas.setText("Vidas: " + nave.getVida());
+        bajas.setText("Enemigos eliminados: " + nave.getBajas());
+        puntuacion.setText("Puntuación: " + nave.getPuntuacion());
+    }
 }
