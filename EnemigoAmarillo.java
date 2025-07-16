@@ -16,8 +16,8 @@ public class EnemigoAmarillo {
             this.visible = false;
         }
     }
-    public void recibirDamage() {
-    	this.vida--;
+    public void recibirDamage(int tipoImpacto) {
+    	this.vida -= tipoImpacto;
     }
     public int getDireccion() {
 	 	return direccion;
