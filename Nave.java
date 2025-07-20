@@ -1,13 +1,20 @@
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 public class Nave {
     private int vida, puntuacion, bajas;
     private int celdaX , celdaY, posicionX, posicionY;
+    private String nombre;
 
     public Nave(){
         this.setVida(5);
         this.setBajas(0);
         this.setCeldaX(5);
         this.setCeldaY(9);
+        this.nombre = JOptionPane.showInputDialog(null, "Ingrese su nombre: ");
+    }
+    public void setNombre(String nombre) {
+    	this.nombre = nombre;
     }
     public void setVida(int vida){
         this.vida = vida;
@@ -32,6 +39,9 @@ public class Nave {
     public void setBajas(int bajas) {
     	this.bajas = bajas;
     }
+    public String getNombre() {
+    	return nombre;
+    }
     public int getVida(){
         return vida;
     }
@@ -54,7 +64,7 @@ public class Nave {
     	return bajas;
     }
     public void recuperarVida(int enemigoDestruido){
-    	if(vida<=10) {
+    	if(vida<=15) {
     		if(enemigoDestruido == 1) {
             	vida++;
             }	else {

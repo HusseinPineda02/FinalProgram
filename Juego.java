@@ -1,36 +1,49 @@
 import java.awt.Color;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import javax.swing.*;
 public class Juego extends JFrame {
-	//ArrayList<Enemigo> enemigos = new ArrayList<Enemigo>();
-	Nave nave = new Nave();
+
+	Nave nave;
+	Tablero mapa;
+	Menu menu;
+	Superior top;
+	String nombre;
+	Sonido musica;
 	
 	Juego(){
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(700,630);
 		this.setLayout(null);
-		this.setTitle("SHIP BATTLE BETA");
+		this.setTitle("StarDust Fighter");
 		this.setResizable(false);
 		this.setBackground(Color.blue);
+	
+		this.nave = new Nave();
+		this.top = new Superior();
+		this.menu = new Menu(nave);
+		this.musica = new Sonido();
+		musica.pistaFondo("src/pokeymid.wav");
 		
-		JLabel titulo = new JLabel ("SHIP BATTLE BETA");
-		titulo.setBounds(300, 20, 200, 50);
+		this.mapa = new Tablero(nave, menu, musica);
+		menu.setTablero(mapa);
 		
-		Menu datos = new Menu(nave);
-		Tablero mapa = new Tablero(nave, datos);
-		Sonido musica = new Sonido();
+		this.setIconImage(new ImageIcon("src/sticon.png").getImage());
 		
-		
-		this.add(datos);
+		this.add(top);
+		this.add(menu);
 		this.add(mapa);
-		this.add(titulo);
+
 		
 		this.setVisible(true);
-		musica.pistaFondo("src/pokeymid.wav");
+		
 	}
-	
+
     public static void main(String[] args){
     	
     	Juego game = new Juego();
- 
+    	 
     }
 }

@@ -2,7 +2,7 @@ public class EnemigoAmarillo {
     private int x, y;
     private int vida = 5;
     public boolean visible = true;
-    private int direccion = 0 ; // 0 izq 1 der
+    private int direccion = 0 ; // 0 izq 1 der	
     
 
     public EnemigoAmarillo(int x, int y) {
