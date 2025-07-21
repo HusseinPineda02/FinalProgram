@@ -1,11 +1,13 @@
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.swing.*;
 public class Juego extends JFrame {
-
+	
 	Nave nave;
 	Tablero mapa;
 	Menu menu;
@@ -40,10 +42,4 @@ public class Juego extends JFrame {
 		this.setVisible(true);
 		
 	}
-
-    public static void main(String[] args){
-    	
-    	Juego game = new Juego();
-    	 
-    }
 }

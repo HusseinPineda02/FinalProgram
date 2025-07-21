@@ -6,7 +6,7 @@ public class Nave {
     private int celdaX , celdaY, posicionX, posicionY;
     private String nombre;
 
-    public Nave(){
+    public Nave(){  	
         this.setVida(5);
         this.setBajas(0);
         this.setCeldaX(5);

@@ -48,8 +48,7 @@ public class Puntuaciones {
 					int puntuacion = Integer.parseInt(partesPunt[1].trim());
 					puntuaciones.add(new Puntaje(nombre,puntuacion));
 				}
-			}
-			
+			}			
 		} catch(IOException e) {
 			JOptionPane.showMessageDialog(null, "Error guardando puntuacion");
 		}

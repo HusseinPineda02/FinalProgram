@@ -387,4 +387,3 @@ public class Tablero extends JPanel implements KeyListener, ActionListener {
     @Override public void keyTyped(KeyEvent e) {}
     @Override public void keyReleased(KeyEvent e) {}
 
-}	
