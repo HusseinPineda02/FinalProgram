@@ -13,7 +13,7 @@ public class MenuPrincipal extends JFrame{
 	
 	public MenuPrincipal() {
 		
-	    this.setTitle("StarDust Fighter - Inicio");
+	    this.setTitle("StarDust Fighter");
 	    this.setSize(700, 700);
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    this.setLocationRelativeTo(null);
@@ -24,6 +24,7 @@ public class MenuPrincipal extends JFrame{
 		Sonido musica = new Sonido();
 		musica.pistaFondo("src/existini.wav");
 		
+		this.setIconImage(new ImageIcon("src/sticon.png").getImage());
 	        
 	    JLabel fondo = new JLabel(new ImageIcon(new ImageIcon("src/stmenu.png").getImage().getScaledInstance(700, 700, Image.SCALE_SMOOTH)));
 		fondo.setBounds(0,0,700, 700);
